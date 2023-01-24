@@ -1,10 +1,21 @@
 local M = {}
 
+local find_prime_folder_idex = function(path_split)
+    local possible_targets = { "lua", "tests" }
+    for i, split in ipairs(path_split) do
+        for _, target in ipairs(possible_targets) do
+            if split == target then
+                return i
+            end
+        end
+    end
+end
+
 M.equivalent = function(path)
     path = path or vim.api.nvim_buf_get_name(0)
     local split = vim.split(path, "/")
 
-    local prime_folder_index = 7 -- TODO: make this an argument
+    local prime_folder_index = find_prime_folder_idex(split)
 
     if split[prime_folder_index] == "lua" then
         split[prime_folder_index] = "tests"
@@ -56,7 +67,7 @@ M.open_file_and_test_in_dual_splits = function(opts)
         vim.cmd(cmd)
     end
 
-    if opts.swap == true then
+    if opts and opts.swap == true then
         vim.cmd("norm! x")
     end
 end
