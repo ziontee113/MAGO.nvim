@@ -47,7 +47,6 @@ describe("MAGO's api's equivalent()", function()
 
         compare_path(path, equivalent)
     end)
-
     it("works if file with `_spec` in it's name, in `lua` folder", function()
         local path = "/home/ziontee113/.config/dev-nvim/MAGO/lua/MAGO/lib/api_specification.lua"
         local equivalent =
@@ -96,6 +95,16 @@ describe("MAGO's api's get_api_and_test_paths", function()
 end)
 
 describe("MAGO's api's open_file_and_test_in_dual_splits()", function()
+    local go_to_left_most_window = function()
+        for _ = 1, 10 do
+            vim.cmd("norm! h")
+        end
+    end
+
+    after_each(function()
+        vim.cmd("q")
+    end)
+
     it("works if current tab has 1 window open", function()
         local api_path = "/home/ziontee113/.config/dev-nvim/MAGO/lua/MAGO/lib/api.lua"
         local test_path = "/home/ziontee113/.config/dev-nvim/MAGO/tests/MAGO/lib/api_spec.lua"
@@ -112,10 +121,8 @@ describe("MAGO's api's open_file_and_test_in_dual_splits()", function()
 
         assert.equal(api_path, api_buf_name)
         assert.equal(test_path, test_buf_name)
-
-        -- test environment clean up
-        vim.cmd("q!")
     end)
+
     it("works if current tab has 2 windows open", function()
         local api_path = "/home/ziontee113/.config/dev-nvim/MAGO/lua/MAGO/lib/api.lua"
         local test_path = "/home/ziontee113/.config/dev-nvim/MAGO/tests/MAGO/lib/api_spec.lua"
@@ -137,10 +144,8 @@ describe("MAGO's api's open_file_and_test_in_dual_splits()", function()
 
         assert.equal(api_path, api_buf_name)
         assert.equal(test_path, test_buf_name)
-
-        -- test environment clean up
-        vim.cmd("q!")
     end)
+
     it("works if current tab has 4 windows open", function()
         local api_path = "/home/ziontee113/.config/dev-nvim/MAGO/lua/MAGO/lib/api.lua"
         local test_path = "/home/ziontee113/.config/dev-nvim/MAGO/tests/MAGO/lib/api_spec.lua"
@@ -154,14 +159,10 @@ describe("MAGO's api's open_file_and_test_in_dual_splits()", function()
         cmd = "vsp " .. "/home/ziontee113/.config/dev-nvim/MAGO/.gitignore"
         vim.cmd(cmd)
 
-        vim.cmd("norm! h")
-        vim.cmd("norm! h")
-        vim.cmd("norm! h")
-        vim.cmd("norm! h")
+        go_to_left_most_window()
         assert.equal(4, #vim.api.nvim_tabpage_list_wins(0))
 
         api.open_file_and_test_in_dual_splits()
-        print(vim.inspect(api.get_api_and_test_paths()))
 
         vim.cmd("norm! h")
         local api_buf_name = vim.api.nvim_buf_get_name(0)
@@ -170,8 +171,5 @@ describe("MAGO's api's open_file_and_test_in_dual_splits()", function()
 
         assert.equal(api_path, api_buf_name)
         assert.equal(test_path, test_buf_name)
-
-        -- test environment clean up
-        vim.cmd("q!")
     end)
 end)
