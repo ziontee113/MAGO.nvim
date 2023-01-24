@@ -37,12 +37,12 @@ describe("MAGO's api's equivalent()", function()
 
     it("works if file in `lua` folder", function()
         local path = "/home/ziontee113/.config/dev-nvim/MAGO/lua/MAGO/lib/api.lua"
-        local equivalent = "/home/ziontee113/.config/dev-nvim/MAGO/tests/MAGO/lib/api.lua"
+        local equivalent = "/home/ziontee113/.config/dev-nvim/MAGO/tests/MAGO/lib/api_spec.lua"
 
         compare_path(path, equivalent)
     end)
     it("works if file in `tests` folder", function()
-        local path = "/home/ziontee113/.config/dev-nvim/MAGO/tests/MAGO/lib/api.lua"
+        local path = "/home/ziontee113/.config/dev-nvim/MAGO/tests/MAGO/lib/api_spec.lua"
         local equivalent = "/home/ziontee113/.config/dev-nvim/MAGO/lua/MAGO/lib/api.lua"
 
         compare_path(path, equivalent)

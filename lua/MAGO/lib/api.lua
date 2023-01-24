@@ -2,16 +2,21 @@ local M = {}
 
 M.equivalent = function()
     local path = vim.api.nvim_buf_get_name(0)
-    local path_split = vim.split(path, "/")
+    local split = vim.split(path, "/")
 
     local index = 7
-    if path_split[index] == "lua" then
-        path_split[index] = "tests"
-    elseif path_split[index] == "tests" then
-        path_split[index] = "lua"
+    if split[index] == "lua" then
+        split[index] = "tests"
+
+        local file_name = string.match(split[#split], "(%a+).lua$")
+        file_name = file_name .. "_spec.lua"
+        split[#split] = file_name
+    elseif split[index] == "tests" then
+        split[index] = "lua"
+        split[#split] = string.gsub(split[#split], "_spec.lua", ".lua")
     end
 
-    return table.concat(path_split, "/")
+    return table.concat(split, "/")
 end
 
 return M
