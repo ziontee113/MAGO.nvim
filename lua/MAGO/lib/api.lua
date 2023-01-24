@@ -1,7 +1,7 @@
 local M = {}
 
-M.equivalent = function()
-    local path = vim.api.nvim_buf_get_name(0)
+M.equivalent = function(path)
+    path = path or vim.api.nvim_buf_get_name(0)
     local split = vim.split(path, "/")
 
     local prime_folder_index = 7 -- TODO: make this an argument
@@ -15,6 +15,17 @@ M.equivalent = function()
     end
 
     return table.concat(split, "/")
+end
+
+M.get_api_and_test_paths = function()
+    local path = M.equivalent()
+    local equivalent = M.equivalent(path)
+
+    if string.match(path, "_spec.lua") then
+        return { equivalent, path }
+    else
+        return { path, equivalent }
+    end
 end
 
 return M

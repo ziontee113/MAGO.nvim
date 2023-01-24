@@ -21,6 +21,8 @@ vim.opt.rtp:append(treesitter_dir)
 
 -->
 
+vim.o.splitright = true
+
 vim.o.tabstop = 4
 vim.o.softtabstop = 0
 vim.o.shiftwidth = 2

@@ -64,3 +64,33 @@ describe("MAGO's api's equivalent()", function()
         compare_path(path, equivalent)
     end)
 end)
+
+describe("foundations for MAGO's api's magic function", function()
+    it("works", function()
+        local api_path = "/home/ziontee113/.config/dev-nvim/MAGO/lua/MAGO/lib/api.lua"
+        local test_path = "/home/ziontee113/.config/dev-nvim/MAGO/tests/MAGO/lib/api_spec.lua"
+
+        local cmd = "e " .. api_path
+        vim.cmd(cmd)
+        cmd = "vs " .. test_path
+        vim.cmd(cmd)
+
+        vim.cmd("norm! l")
+        local buffer_path = vim.api.nvim_buf_get_name(0)
+        assert.equal(test_path, buffer_path)
+    end)
+end)
+
+describe("MAGO's api's get_api_and_test_paths", function()
+    it("works", function()
+        local api_path = "/home/ziontee113/.config/dev-nvim/MAGO/lua/MAGO/lib/api.lua"
+        local test_path = "/home/ziontee113/.config/dev-nvim/MAGO/tests/MAGO/lib/api_spec.lua"
+
+        local cmd = "e " .. api_path
+        vim.cmd(cmd)
+
+        local want = { api_path, test_path }
+        local got = api.get_api_and_test_paths()
+        assert.same(want, got)
+    end)
+end)
