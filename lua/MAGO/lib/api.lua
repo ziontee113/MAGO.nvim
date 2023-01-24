@@ -28,7 +28,7 @@ M.get_api_and_test_paths = function()
     end
 end
 
-M.open_file_and_test_in_dual_splits = function()
+M.open_file_and_test_in_dual_splits = function(opts)
     local api_path, test_path = unpack(M.get_api_and_test_paths())
     local current_tab_wins = vim.api.nvim_tabpage_list_wins(0)
 
@@ -54,6 +54,10 @@ M.open_file_and_test_in_dual_splits = function()
         vim.cmd(cmd)
         cmd = "vs " .. test_path
         vim.cmd(cmd)
+    end
+
+    if opts.swap == true then
+        vim.cmd("norm! x")
     end
 end
 
