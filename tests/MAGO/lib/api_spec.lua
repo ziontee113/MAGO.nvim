@@ -47,4 +47,20 @@ describe("MAGO's api's equivalent()", function()
 
         compare_path(path, equivalent)
     end)
+
+    it("works if file with `_spec` in it's name, in `lua` folder", function()
+        local path = "/home/ziontee113/.config/dev-nvim/MAGO/lua/MAGO/lib/api_specification.lua"
+        local equivalent =
+            "/home/ziontee113/.config/dev-nvim/MAGO/tests/MAGO/lib/api_specification_spec.lua"
+
+        compare_path(path, equivalent)
+    end)
+    it("works if file with `_spec` in it's name, in `tests` folder", function()
+        local path =
+            "/home/ziontee113/.config/dev-nvim/MAGO/tests/MAGO/lib/api_specification_spec.lua"
+        local equivalent =
+            "/home/ziontee113/.config/dev-nvim/MAGO/lua/MAGO/lib/api_specification.lua"
+
+        compare_path(path, equivalent)
+    end)
 end)
