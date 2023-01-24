@@ -28,4 +28,33 @@ M.get_api_and_test_paths = function()
     end
 end
 
+M.open_file_and_test_in_dual_splits = function()
+    local api_path, test_path = unpack(M.get_api_and_test_paths())
+    local current_tab_wins = vim.api.nvim_tabpage_list_wins(0)
+
+    if #current_tab_wins > 2 then
+        for _ = 3, #current_tab_wins do
+            vim.api.nvim_win_close(0, true)
+        end
+    end
+
+    current_tab_wins = vim.api.nvim_tabpage_list_wins(0)
+
+    if #current_tab_wins == 2 then
+        vim.cmd("norm! h")
+        local cmd = "e " .. api_path
+        vim.cmd(cmd)
+        vim.cmd("norm! l")
+        cmd = "e " .. test_path
+        vim.cmd(cmd)
+    end
+
+    if #current_tab_wins == 1 then
+        local cmd = "e " .. api_path
+        vim.cmd(cmd)
+        cmd = "vs " .. test_path
+        vim.cmd(cmd)
+    end
+end
+
 return M

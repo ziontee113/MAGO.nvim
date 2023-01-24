@@ -94,3 +94,84 @@ describe("MAGO's api's get_api_and_test_paths", function()
         assert.same(want, got)
     end)
 end)
+
+describe("MAGO's api's open_file_and_test_in_dual_splits()", function()
+    it("works if current tab has 1 window open", function()
+        local api_path = "/home/ziontee113/.config/dev-nvim/MAGO/lua/MAGO/lib/api.lua"
+        local test_path = "/home/ziontee113/.config/dev-nvim/MAGO/tests/MAGO/lib/api_spec.lua"
+
+        local cmd = "e " .. api_path
+        vim.cmd(cmd)
+
+        api.open_file_and_test_in_dual_splits()
+
+        vim.cmd("norm! h")
+        local api_buf_name = vim.api.nvim_buf_get_name(0)
+        vim.cmd("norm! l")
+        local test_buf_name = vim.api.nvim_buf_get_name(0)
+
+        assert.equal(api_path, api_buf_name)
+        assert.equal(test_path, test_buf_name)
+
+        -- test environment clean up
+        vim.cmd("q!")
+    end)
+    it("works if current tab has 2 windows open", function()
+        local api_path = "/home/ziontee113/.config/dev-nvim/MAGO/lua/MAGO/lib/api.lua"
+        local test_path = "/home/ziontee113/.config/dev-nvim/MAGO/tests/MAGO/lib/api_spec.lua"
+
+        local cmd = "e " .. api_path
+        vim.cmd(cmd)
+        cmd = "vsp " .. "/home/ziontee113/.config/dev-nvim/MAGO/stylua.toml"
+        vim.cmd(cmd)
+        vim.cmd("norm! h")
+
+        assert.equal(2, #vim.api.nvim_tabpage_list_wins(0))
+
+        api.open_file_and_test_in_dual_splits()
+
+        vim.cmd("norm! h")
+        local api_buf_name = vim.api.nvim_buf_get_name(0)
+        vim.cmd("norm! l")
+        local test_buf_name = vim.api.nvim_buf_get_name(0)
+
+        assert.equal(api_path, api_buf_name)
+        assert.equal(test_path, test_buf_name)
+
+        -- test environment clean up
+        vim.cmd("q!")
+    end)
+    it("works if current tab has 4 windows open", function()
+        local api_path = "/home/ziontee113/.config/dev-nvim/MAGO/lua/MAGO/lib/api.lua"
+        local test_path = "/home/ziontee113/.config/dev-nvim/MAGO/tests/MAGO/lib/api_spec.lua"
+
+        local cmd = "e " .. api_path
+        vim.cmd(cmd)
+        cmd = "vsp " .. "/home/ziontee113/.config/dev-nvim/MAGO/stylua.toml"
+        vim.cmd(cmd)
+        cmd = "vsp " .. "/home/ziontee113/.config/dev-nvim/MAGO/lua/MAGO/init.lua"
+        vim.cmd(cmd)
+        cmd = "vsp " .. "/home/ziontee113/.config/dev-nvim/MAGO/.gitignore"
+        vim.cmd(cmd)
+
+        vim.cmd("norm! h")
+        vim.cmd("norm! h")
+        vim.cmd("norm! h")
+        vim.cmd("norm! h")
+        assert.equal(4, #vim.api.nvim_tabpage_list_wins(0))
+
+        api.open_file_and_test_in_dual_splits()
+        print(vim.inspect(api.get_api_and_test_paths()))
+
+        vim.cmd("norm! h")
+        local api_buf_name = vim.api.nvim_buf_get_name(0)
+        vim.cmd("norm! l")
+        local test_buf_name = vim.api.nvim_buf_get_name(0)
+
+        assert.equal(api_path, api_buf_name)
+        assert.equal(test_path, test_buf_name)
+
+        -- test environment clean up
+        vim.cmd("q!")
+    end)
+end)
