@@ -15,7 +15,7 @@ M.get_new_line_positions = function(input)
     return new_line_positons
 end
 
-M.myfunc = function(input, range)
+M.convert_range = function(input, range)
     local new_line_positons = M.get_new_line_positions(input)
     local start_row, start_col, end_row, end_col = unpack(range)
 
