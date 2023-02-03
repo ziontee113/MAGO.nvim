@@ -7,12 +7,11 @@ poem:
 Every day is a beautiful day.
 Some other day is not something beautiful.]]
 
-    it("converts `start_row, start_col, end_row, end_col` to `start, _end`", function()
-        module.myfunc(input)
+    it("converts `start_row, start_col, end_row, end_col` to `start_pos, end_pos`", function()
+        local want = { 7, 11 }
+        local got = module.myfunc(input, { 2, 1, 2, 5 })
 
-        -- local start_row, start_col, end_row, end_col = 2, 1, 2, 5
-
-        -- local want = { 7, 11 }
+        assert.are.same(want, got)
     end)
 
     it("multi line vs single line demonstration", function()
