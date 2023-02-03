@@ -1,9 +1,19 @@
+local module = require("MAGO.lib.luastring_converter")
+
 ---@diagnostic disable: redefined-local
 describe("converting multi line range to single line range", function()
     local input = [[
 poem:
 Every day is a beautiful day.
 Some other day is not something beautiful.]]
+
+    it("converts `start_row, start_col, end_row, end_col` to `start, _end`", function()
+        module.myfunc(input)
+
+        -- local start_row, start_col, end_row, end_col = 2, 1, 2, 5
+
+        -- local want = { 7, 11 }
+    end)
 
     it("multi line vs single line demonstration", function()
         local expected =
@@ -31,9 +41,5 @@ Some other day is not something beautiful.]]
         local find_start, find_end = input:find("day", 34)
         assert.equal(find_start, 48)
         assert.equal(find_end, 50)
-    end)
-
-    it("string:gsub() demonstration", function()
-        -- TODO:
     end)
 end)
