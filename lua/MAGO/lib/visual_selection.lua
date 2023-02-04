@@ -11,6 +11,18 @@ M.get_visual_range = function()
         end_col = vim.fn.col("$")
     end
 
+    if start_row > end_row then
+        local temp_start_row = end_row
+        end_row = start_row
+        start_row = temp_start_row
+    end
+
+    if start_row == end_row and start_col > end_col then
+        local temp_start_col = end_col
+        end_col = start_col
+        start_col = temp_start_col
+    end
+
     return start_row, start_col, end_row, end_col
 end
 
