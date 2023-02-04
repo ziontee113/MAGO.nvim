@@ -19,6 +19,8 @@ M.convert_range = function(input, range)
     local new_line_positons = M.get_new_line_positions(input)
     local start_row, start_col, end_row, end_col = unpack(range)
 
+    N({ start_row, start_col, end_row, end_col })
+
     local start_pos = new_line_positons[start_row] + start_col
     local end_pos = new_line_positons[end_row] + end_col
 
@@ -27,6 +29,7 @@ end
 
 local FormatSession = {
     original_content = "",
+    offset = nil,
     ranges = {},
 
     left_delimiter = "{",
@@ -34,9 +37,10 @@ local FormatSession = {
 }
 FormatSession.__index = FormatSession
 
-function FormatSession.new(original_content)
+function FormatSession.new(original_content, offset)
     local session = vim.deepcopy(FormatSession)
     session.original_content = original_content
+    session.offset = offset
 
     return session
 end
