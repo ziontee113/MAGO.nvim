@@ -60,7 +60,7 @@ end)
 describe("FormatSession:produce_placeholder()", function()
     local session = module.FormatSession.new(original_content)
 
-    it("works", function()
+    it("works with 2 placeholder, each contents in the same line", function()
         session:add_range({ 2, 1, 2, 5 }) -- `Every` first word of line 2
         session:add_range({ 3, 6, 3, 10 }) -- `other` - 2nd word of line 3
 
