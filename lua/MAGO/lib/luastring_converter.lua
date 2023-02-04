@@ -25,28 +25,55 @@ M.convert_range = function(input, range)
     return { start_pos, end_pos }
 end
 
-M.FormatSession = {
+local FormatSession = {
     original_content = "",
     ranges = {},
 
     left_delimiter = "{",
     right_delimiter = "}",
 }
-M.FormatSession.__index = M.FormatSession
+FormatSession.__index = FormatSession
 
-function M.FormatSession:new(original_content)
-    local session = setmetatable({}, M.FormatSession)
-    self.original_content = original_content
+function FormatSession.new(original_content)
+    local session = vim.deepcopy(FormatSession)
+    session.original_content = original_content
 
     return session
 end
 
-function M.FormatSession:add_range(range)
+function FormatSession:add_range(range)
     table.insert(self.ranges, M.convert_range(self.original_content, range))
 end
 
-function M.FormatSession:produce_placeholder()
-    -- TODO:
+function FormatSession:display_content()
+    return self.original_content
 end
+
+function FormatSession:produce_placeholder()
+    local final_result = ""
+    local last_index = 1
+
+    for i, range in ipairs(self.ranges) do
+        local content_piece = self.original_content:sub(last_index, range[1] - 1)
+
+        last_index = range[2] + 1
+
+        if i == 1 then
+            final_result = content_piece
+        else
+            final_result = final_result
+                .. self.left_delimiter
+                .. self.right_delimiter
+                .. content_piece
+        end
+    end
+
+    local final_piece = self.original_content:sub(last_index, #self.original_content)
+    final_result = final_result .. self.left_delimiter .. self.right_delimiter .. final_piece
+
+    return final_result
+end
+
+M.FormatSession = FormatSession
 
 return M
