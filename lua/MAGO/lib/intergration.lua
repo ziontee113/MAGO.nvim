@@ -1,4 +1,4 @@
-local module = require("MAGO.lib.luastring_converter")
+local module = require("MAGO.lib.format_session")
 local lib_selection = require("MAGO.lib.visual_selection")
 
 local reduce_row_number = function(offset, start_row, start_col, end_row, end_col)

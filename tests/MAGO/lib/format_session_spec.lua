@@ -1,5 +1,5 @@
 ---@diagnostic disable: redefined-local
-local module = require("MAGO.lib.luastring_converter")
+local module = require("MAGO.lib.format_session")
 
 local original_content = [[
 poem:

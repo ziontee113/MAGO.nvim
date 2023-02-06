@@ -25,7 +25,9 @@ M.convert_range = function(input, range)
     return { start_pos, end_pos }
 end
 
-local FormatSession = {
+--------------------------------------------
+
+M.FormatSession = {
     original_content = "",
     offset = nil,
     ranges = {},
@@ -33,25 +35,25 @@ local FormatSession = {
     left_delimiter = "{",
     right_delimiter = "}",
 }
-FormatSession.__index = FormatSession
+M.FormatSession.__index = M.FormatSession
 
-function FormatSession.new(original_content, offset)
-    local session = vim.deepcopy(FormatSession)
+function M.FormatSession.new(original_content, offset)
+    local session = vim.deepcopy(M.FormatSession)
     session.original_content = original_content
     session.offset = offset
 
     return session
 end
 
-function FormatSession:add_range(range)
+function M.FormatSession:add_range(range)
     table.insert(self.ranges, M.convert_range(self.original_content, range))
 end
 
-function FormatSession:display_content()
+function M.FormatSession:display_content()
     return self.original_content
 end
 
-function FormatSession:produce_placeholder()
+function M.FormatSession:produce_placeholder()
     local final_result = ""
     local last_index = 1
 
@@ -75,7 +77,5 @@ function FormatSession:produce_placeholder()
 
     return final_result
 end
-
-M.FormatSession = FormatSession
 
 return M
