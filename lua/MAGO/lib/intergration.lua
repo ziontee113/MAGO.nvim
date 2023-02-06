@@ -10,6 +10,11 @@ end
 
 --------------------------------------------
 
+-- TODO: Sort ranges before producing placeholder
+-- TODO: Add ranges' contents to ranges
+
+--------------------------------------------
+
 local session
 
 local init_session = function()
@@ -33,8 +38,9 @@ end, {})
 
 vim.keymap.set("x", "<CR>", function()
     if session then
+        local content = lib_selection.get_selection_text({ dedent = true })
         local range = reduce_row_number(session.offset, lib_selection.get_visual_range())
-        session:add_range(range)
+        session:add_range(range, content)
     else
         init_session()
     end

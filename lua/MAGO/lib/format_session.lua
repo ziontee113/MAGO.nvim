@@ -1,3 +1,4 @@
+local visual_selection = require("MAGO.lib.visual_selection")
 local M = {}
 
 M.get_new_line_positions = function(input)
@@ -45,19 +46,32 @@ function M.FormatSession.new(original_content, offset)
     return session
 end
 
-function M.FormatSession:add_range(range)
-    table.insert(self.ranges, M.convert_range(self.original_content, range))
+function M.FormatSession:add_range(range, content)
+    table.insert(self.ranges, { M.convert_range(self.original_content, range), content })
 end
 
 function M.FormatSession:display_content()
     return self.original_content
 end
 
+function M.FormatSession:sort_ranges()
+    table.sort(self.ranges, function(a, b)
+        return a[1][1] < b[1][1]
+    end)
+    table.sort(self.ranges, function(a, b)
+        return a[1][2] < b[1][2]
+    end)
+end
+
 function M.FormatSession:produce_placeholder()
     local final_result = ""
     local last_index = 1
 
+    self:sort_ranges()
+
     for i, range in ipairs(self.ranges) do
+        ---@diagnostic disable-next-line: redefined-local, unused-local
+        local range, __content = unpack(range)
         local content_piece = self.original_content:sub(last_index, range[1] - 1)
 
         last_index = range[2] + 1

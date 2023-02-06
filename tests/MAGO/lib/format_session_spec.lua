@@ -42,7 +42,7 @@ describe("FormatSession:add_range()", function()
         session:add_range({ 2, 1, 2, 5 })
 
         local wanted_range = { 7, 11 }
-        local converted_range = session.ranges[1]
+        local converted_range = session.ranges[1][1]
         assert.same(wanted_range, converted_range)
         assert.equals("Every", original_content:sub(converted_range[1], converted_range[2]))
     end)
@@ -51,16 +51,16 @@ describe("FormatSession:add_range()", function()
         session:add_range({ 3, 6, 3, 10 })
 
         local wanted_range = { 42, 46 }
-        local converted_range = session.ranges[2]
+        local converted_range = session.ranges[2][1]
         assert.same(wanted_range, converted_range)
         assert.equals("other", original_content:sub(converted_range[1], converted_range[2]))
     end)
 end)
 
 describe("FormatSession:produce_placeholder()", function()
-    local session = module.FormatSession.new(original_content)
+    it("works with 2 placeholders", function()
+        local session = module.FormatSession.new(original_content)
 
-    it("works with 2 placeholder, each contents in the same line", function()
         session:add_range({ 2, 1, 2, 5 }) -- `Every` first word of line 2
         session:add_range({ 3, 6, 3, 10 }) -- `other` - 2nd word of line 3
 
@@ -74,4 +74,25 @@ Some {} day is not something beautiful.]]
 
         assert.same(want, got)
     end)
+
+    it(
+        "works with 2 placeholders, but add_range() order not from top -> down, left -> right",
+        function()
+            local session = module.FormatSession.new(original_content)
+
+            -- the add_range() calls are swapped in order
+            session:add_range({ 3, 6, 3, 10 }) -- `other` - 2nd word of line 3
+            session:add_range({ 2, 1, 2, 5 }) -- `Every` first word of line 2
+
+            assert.same(#session.ranges, 2)
+
+            local got = session:produce_placeholder()
+            local want = [[
+poem:
+{} day is a beautiful day.
+Some {} day is not something beautiful.]]
+
+            assert.same(want, got)
+        end
+    )
 end)
