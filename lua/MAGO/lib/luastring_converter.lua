@@ -19,8 +19,6 @@ M.convert_range = function(input, range)
     local new_line_positons = M.get_new_line_positions(input)
     local start_row, start_col, end_row, end_col = unpack(range)
 
-    N({ start_row, start_col, end_row, end_col })
-
     local start_pos = new_line_positons[start_row] + start_col
     local end_pos = new_line_positons[end_row] + end_col
 

@@ -8,7 +8,7 @@ M.get_visual_range = function()
 
     if vim.fn.mode() == "V" then
         start_col = 1
-        end_col = vim.fn.col("$")
+        end_col = vim.fn.col("$") - 1
     end
 
     if start_row > end_row then

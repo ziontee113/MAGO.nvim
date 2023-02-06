@@ -14,10 +14,8 @@ local session
 
 local init_session = function()
     local content = lib_selection.get_selection_text({ dedent = true })
-    local offset = lib_selection.get_visual_range()
-    session = module.FormatSession.new(content, offset)
-
-    N("snippet creation process started, with offset = " .. session.offset)
+    local row_offset = lib_selection.get_visual_range()
+    session = module.FormatSession.new(content, row_offset)
 end
 
 local end_session = function()
