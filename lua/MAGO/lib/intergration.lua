@@ -10,8 +10,8 @@ end
 
 --------------------------------------------
 
--- TODO: Sort ranges before producing placeholder
--- TODO: Add ranges' contents to ranges
+-- TODO: handle `dedent` correctly
+-- TODO: have better `dedent` control / logic flow
 
 --------------------------------------------
 
@@ -44,5 +44,7 @@ vim.keymap.set("x", "<CR>", function()
     else
         init_session()
     end
+
+    vim.cmd("norm! ")
 end, {})
 -- {{{nvim-execute-on-save}}}
