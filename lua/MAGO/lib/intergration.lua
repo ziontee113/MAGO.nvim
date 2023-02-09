@@ -13,6 +13,15 @@ end
 -- TODO: handle `dedent` correctly
 -- TODO: have better `dedent` control / logic flow
 
+-- TODO: we got `body`, now we need to add `placeholders`
+-- QUESTION: we're struggling because we don't know which module controls what
+
+-- TODO: after confirming the visual selection with <CR>,
+-- TODO: we should have some kind of mechanism / quick shortcut to launch
+-- the user to the next possible relevant selection
+---- We could call this feature: Visual Launcher
+---- We might be able to expand and capitalize this feature.
+
 --------------------------------------------
 
 local session
