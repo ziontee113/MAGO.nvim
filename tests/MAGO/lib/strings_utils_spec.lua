@@ -98,9 +98,10 @@ end)
 describe("replace_range", function()
     it("works with single line case", function()
         local input = "hello venus"
-        local want = "welcome venus"
+        local range = { 1, 1, 1, 5 }
 
-        local got = lib_strings.replace_range(input, "welcome", 1, 1, 1, 5)
+        local want = "welcome venus"
+        local got = lib_strings.replace_range(input, "welcome", range)
         assert.same(want, got)
     end)
 
@@ -110,13 +111,14 @@ local name = function()
     local x = 10
 end
 ]]
+        local range = { 1, 7, 1, 10 }
+
         local want = [[
 local {} = function()
     local x = 10
 end
 ]]
-
-        local got = lib_strings.replace_range(input, "{}", 1, 7, 1, 10)
+        local got = lib_strings.replace_range(input, "{}", range)
         assert.same(want, got)
     end)
 
@@ -125,10 +127,11 @@ end
 local name = function()
     local x = 10
 end]]
+        local range = { 1, 14, 3, 3 }
+
         local want = [[
 local name = {}]]
-
-        local got = lib_strings.replace_range(input, "{}", 1, 14, 3, 3)
+        local got = lib_strings.replace_range(input, "{}", range)
         assert.are.same(want, got)
     end)
 end)

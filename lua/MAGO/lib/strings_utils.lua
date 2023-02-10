@@ -59,55 +59,60 @@ M.dedent = function(input)
     end
 end
 
-M.replace_range =
-    ---@param input string
-    ---@param replacement string
-    ---@param start_row number
-    ---@param start_col number
-    ---@param end_row number
-    ---@param end_col number
-    ---@return string|table
-    function(input, replacement, start_row, start_col, end_row, end_col)
-        local lines
-        if type(input) == "table" then
-            lines = input
-        elseif type(input) == "string" then
-            lines = vim.split(input, "\n")
-        end
+-- QUESTION: why is this function so long?
 
-        local lines_to_delete = {}
-        for i, _ in ipairs(lines) do
-            -- checks for lines to delete
-            if i > start_row and i < end_row then
-                table.insert(lines_to_delete, i)
-            end
+-- QUESTION: what does it even do?
 
-            local start = lines[i]:sub(1, start_col - 1)
-            local _end = lines[i]:sub(end_col + 1)
+-- QUESTION: why is there no other places using this function outside the tests?
+-- ANSWER: because we use the concatenation method from ranges to replace contents instead.
 
-            if i == start_row and i == end_row then
-                lines[i] = start .. replacement .. lines[i]:sub(end_col + 1)
-            else
-                if i == start_row then
-                    lines[i] = start .. replacement
-                end
-                if i == end_row then
-                    lines[i] = _end
-                    if M.if_string_empty(lines[i]) then
-                        table.insert(lines_to_delete, i)
-                    end
-                end
-            end
-        end
+-- QUESTION: why so many arguments? I'm confused.
+-- ANSWER: yes, we should refactor `start_row, start_col, end_row, end_col` to use a table instead.
+-- doing so will however break implementations that depends on this `replace_range` function.
 
-        for i = #lines_to_delete, 1, -1 do
-            table.remove(lines, lines_to_delete[i])
-        end
+M.replace_range = function(input, replacement, range)
+    local start_row, start_col, end_row, end_col = unpack(range)
 
-        if type(input) == "table" then
-            return lines
-        end
-        return table.concat(lines, "\n")
+    local lines
+    if type(input) == "table" then
+        lines = input
+    elseif type(input) == "string" then
+        lines = vim.split(input, "\n")
     end
+
+    local lines_to_delete = {}
+    for i, _ in ipairs(lines) do
+        -- checks for lines to delete
+        if i > start_row and i < end_row then
+            table.insert(lines_to_delete, i)
+        end
+
+        local start = lines[i]:sub(1, start_col - 1)
+        local _end = lines[i]:sub(end_col + 1)
+
+        if i == start_row and i == end_row then
+            lines[i] = start .. replacement .. lines[i]:sub(end_col + 1)
+        else
+            if i == start_row then
+                lines[i] = start .. replacement
+            end
+            if i == end_row then
+                lines[i] = _end
+                if M.if_string_empty(lines[i]) then
+                    table.insert(lines_to_delete, i)
+                end
+            end
+        end
+    end
+
+    for i = #lines_to_delete, 1, -1 do
+        table.remove(lines, lines_to_delete[i])
+    end
+
+    if type(input) == "table" then
+        return lines
+    end
+    return table.concat(lines, "\n")
+end
 
 return M
