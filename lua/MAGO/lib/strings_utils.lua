@@ -18,10 +18,20 @@ M.if_string_empty = function(str)
     return false
 end
 
----Currently with the intention of reducing `spaces`, not `tabs`
----Will annoy `tab` users if kept like this
----@param input string|table
----@return any
+local function get_smallest_indent(lines)
+    local smallest_indent = math.huge
+    for _, line in ipairs(lines) do
+        local og_len = #line
+        local trimmed = string.gsub(line, "^ +", "")
+        local trimmed_len = #trimmed
+        local spaces_len = og_len - trimmed_len
+        if not M.if_string_empty(line) and (spaces_len < smallest_indent) then
+            smallest_indent = spaces_len
+        end
+    end
+    return smallest_indent
+end
+
 M.dedent = function(input)
     local lines
     if type(input) == "table" then
@@ -30,22 +40,9 @@ M.dedent = function(input)
         lines = vim.split(input, "\n")
     end
 
-    local smallest_indent = math.huge
-
-    for _, line in ipairs(lines) do
-        local og_len = #line
-        -- local trimmed = string.gsub(line, "%s+", "")
-        local trimmed = string.gsub(line, "^ +", "")
-        local trimmed_len = #trimmed
-        local spaces_len = og_len - trimmed_len
-
-        if not M.if_string_empty(line) and (spaces_len < smallest_indent) then
-            smallest_indent = spaces_len
-        end
-    end
-
-    local new_lines = {}
+    local smallest_indent = get_smallest_indent(lines)
     local pattern = "^" .. string.rep(" ", smallest_indent)
+    local new_lines = {}
     for _, line in ipairs(lines) do
         local new_line = string.gsub(line, pattern, "")
         table.insert(new_lines, new_line)

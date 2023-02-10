@@ -15,7 +15,7 @@ describe("module.if_string_empty()", function()
     end)
 end)
 
-describe("module.reduce_indent()", function()
+describe("module.dedent()", function()
     it("works with single line, case 1", function()
         local input = [[
     Hello]]
