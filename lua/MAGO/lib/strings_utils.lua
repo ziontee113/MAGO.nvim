@@ -18,6 +18,9 @@ M.if_string_empty = function(str)
     return false
 end
 
+--- Returns the length of the smallest common indentation of the given lines
+-- @param lines (table of strings) an array of strings representing the lines to dedent
+-- @return (number) the length of the smallest common indentation
 local function get_smallest_indent(lines)
     local smallest_indent = math.huge
     for _, line in ipairs(lines) do
@@ -32,6 +35,9 @@ local function get_smallest_indent(lines)
     return smallest_indent
 end
 
+--- Dedents the input by removing the smallest common indentation from each line
+-- @param input (string or table of strings) the input to dedent
+-- @return (string or table of strings) the dedented input
 M.dedent = function(input)
     local lines
     if type(input) == "table" then
