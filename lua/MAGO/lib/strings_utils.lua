@@ -2,20 +2,11 @@ local M = {}
 
 --=============== Strings Utils ===============
 
----check if string is empty / consists of only whitespaces
----uses `string.match(str, "%s*")`
----@param str string
----@return boolean
-M.if_string_empty = function(str)
-    if type(str) == "table" then
-        str = str[1]
-    end
-
-    if string.match(str, "%s*") == str then
-        return true
-    end
-
-    return false
+--- Returns whether the given string is empty or consists only of whitespaces
+-- @param str (string) the string to check
+-- @return (boolean) whether the string is empty or consists only of whitespaces
+function M.if_string_empty(str)
+    return string.match(str, "%s*") == str
 end
 
 --- Returns the length of the smallest common indentation of the given lines
