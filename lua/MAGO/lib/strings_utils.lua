@@ -53,47 +53,33 @@ M.dedent = function(input)
     end
 end
 
--- QUESTION: why is this function so long?
-
--- QUESTION: what does it even do?
-
--- QUESTION: why is there no other places using this function outside the tests?
--- ANSWER: because we use the concatenation method from ranges to replace contents instead.
-
--- QUESTION: why so many arguments? I'm confused.
--- ANSWER: yes, we should refactor `start_row, start_col, end_row, end_col` to use a table instead.
--- doing so will however break implementations that depends on this `replace_range` function.
-
-M.replace_range = function(input, replacement, range)
+--- Replaces a range of characters in the given input string or table of strings
+-- @param input (string or table<string>) the input string or table of strings to replace characters in
+-- @param replacement (string) the replacement string
+-- @param range (table<number, number, number, number>) the start and end indices of the range to replace, given as a table of four numbers representing start_row, start_col, end_row, end_col
+-- @return (string or table<string>) the input with the specified range replaced
+function M.replace_range(input, replacement, range)
     local start_row, start_col, end_row, end_col = unpack(range)
-
-    local lines
-    if type(input) == "table" then
-        lines = input
-    elseif type(input) == "string" then
-        lines = vim.split(input, "\n")
-    end
-
+    local lines = type(input) == "table" and input or vim.split(input, "\n")
     local lines_to_delete = {}
-    for i, _ in ipairs(lines) do
-        -- checks for lines to delete
+
+    for i, line in ipairs(lines) do
         if i > start_row and i < end_row then
             table.insert(lines_to_delete, i)
-        end
-
-        local start = lines[i]:sub(1, start_col - 1)
-        local _end = lines[i]:sub(end_col + 1)
-
-        if i == start_row and i == end_row then
-            lines[i] = start .. replacement .. lines[i]:sub(end_col + 1)
         else
-            if i == start_row then
-                lines[i] = start .. replacement
-            end
-            if i == end_row then
-                lines[i] = _end
-                if M.if_string_empty(lines[i]) then
-                    table.insert(lines_to_delete, i)
+            local start = line:sub(1, start_col - 1)
+            local _end = line:sub(end_col + 1)
+            if i == start_row and i == end_row then
+                lines[i] = start .. replacement .. line:sub(end_col + 1)
+            else
+                if i == start_row then
+                    lines[i] = start .. replacement
+                end
+                if i == end_row then
+                    lines[i] = _end
+                    if M.if_string_empty(lines[i]) then
+                        table.insert(lines_to_delete, i)
+                    end
                 end
             end
         end
@@ -103,10 +89,7 @@ M.replace_range = function(input, replacement, range)
         table.remove(lines, lines_to_delete[i])
     end
 
-    if type(input) == "table" then
-        return lines
-    end
-    return table.concat(lines, "\n")
+    return type(input) == "table" and lines or table.concat(lines, "\n")
 end
 
 return M
