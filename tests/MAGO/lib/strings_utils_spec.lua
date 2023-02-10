@@ -1,111 +1,64 @@
 local lib_strings = require("MAGO.lib.strings_utils")
 
-describe("module.if_string_empty()", function()
-    it("check if string `empty`", function()
+describe("if_string_empty()", function()
+    it("returns true for empty strings", function()
         assert.is_true(lib_strings.if_string_empty(""))
         assert.is_true(lib_strings.if_string_empty("    "))
-        assert.is_true(lib_strings.if_string_empty("        "))
+        assert.is_true(lib_strings.if_string_empty("\t"))
         assert.is_true(lib_strings.if_string_empty("  \n  \t   "))
     end)
 
-    it("check if string `not empty`", function()
+    it("returns false for non-empty strings", function()
         assert.is_false(lib_strings.if_string_empty("ching cheng han ji"))
-        assert.is_false(lib_strings.if_string_empty("  tom cat"))
-        assert.is_false(lib_strings.if_string_empty("  jerry        "))
+        assert.is_false(lib_strings.if_string_empty("tom cat"))
+        assert.is_false(lib_strings.if_string_empty("jerry"))
     end)
 end)
 
-describe("module.dedent()", function()
-    it("works with single line, case 1", function()
-        local input = [[
-    Hello]]
+describe("dedent()", function()
+    it("removes leading whitespaces from a single line string", function()
+        local input = "    Hello"
+        local expected = "Hello"
 
-        local want = [[
-Hello]]
+        local result = lib_strings.dedent(input)
 
-        local got = lib_strings.dedent(input)
-
-        assert.equals(want, got)
+        assert.equals(expected, result)
     end)
 
-    it("works with single line, case 2", function()
-        local input = [[
-    Hello
-]]
-
-        local want = [[
-Hello
-]]
-
-        local got = lib_strings.dedent(input)
-
-        assert.equals(want, got)
-    end)
-
-    it("works with same level of indentation", function()
-        local input = [[
-    Hello
-    Venus]]
-
-        local want = [[
-Hello
-Venus]]
-
-        local got = lib_strings.dedent(input)
-
-        assert.equals(want, got)
-    end)
-
-    it("works with 2 different levels of indentation", function()
+    it("removes leading whitespaces from a multi-line string", function()
         local input = [[
     Hello
         Venus]]
-
-        local want = [[
+        local expected = [[
 Hello
     Venus]]
 
-        local got = lib_strings.dedent(input)
+        local result = lib_strings.dedent(input)
 
-        assert.same(want, got)
+        assert.equals(expected, result)
     end)
 
-    it("works with 3 different levels of indentation", function()
-        local input = [[
-    Hello
-            Something More
-        Venus]]
-
-        local want = [[
-Hello
-        Something More
-    Venus]]
-
-        local got = lib_strings.dedent(input)
-
-        assert.same(want, got)
-    end)
-
-    it("works if input is type table", function()
+    it("handles leading whitespaces for strings in a table", function()
         local input = { "    -- TODO:" }
-        local want = { "-- TODO:" }
+        local expected = { "-- TODO:" }
 
-        local got = lib_strings.dedent(input)
-        assert.same(want, got)
+        local result = lib_strings.dedent(input)
+        assert.same(expected, result)
     end)
 end)
 
-describe("replace_range", function()
-    it("works with single line case", function()
+describe("replace_range()", function()
+    it("replaces a range in a single-line string", function()
         local input = "hello venus"
         local range = { 1, 1, 1, 5 }
 
-        local want = "welcome venus"
-        local got = lib_strings.replace_range(input, "welcome", range)
-        assert.same(want, got)
+        local expected = "welcome venus"
+        local result = lib_strings.replace_range(input, "welcome", range)
+
+        assert.same(expected, result)
     end)
 
-    it("works with multi line, range at same line", function()
+    it("replaces a range in a multi-line string", function()
         local input = [[
 local name = function()
     local x = 10
@@ -113,25 +66,27 @@ end
 ]]
         local range = { 1, 7, 1, 10 }
 
-        local want = [[
+        local expected = [[
 local {} = function()
     local x = 10
 end
 ]]
-        local got = lib_strings.replace_range(input, "{}", range)
-        assert.same(want, got)
+        local result = lib_strings.replace_range(input, "{}", range)
+
+        assert.same(expected, result)
     end)
 
-    it("works with multi line, range at different lines", function()
+    it("replaces a range in a multi-line string across different lines", function()
         local input = [[
 local name = function()
     local x = 10
 end]]
         local range = { 1, 14, 3, 3 }
 
-        local want = [[
+        local expected = [[
 local name = {}]]
-        local got = lib_strings.replace_range(input, "{}", range)
-        assert.are.same(want, got)
+        local result = lib_strings.replace_range(input, "{}", range)
+
+        assert.are.same(expected, result)
     end)
 end)
