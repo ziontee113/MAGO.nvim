@@ -1,5 +1,10 @@
 local M = {}
 
+--[[ My Current Project Requirements
+[ ] Item 1
+[ ] Item 2
+[ ] Item 3 ]]
+
 local find_prime_folder_idex = function(path_split)
     local possible_targets = { "lua", "tests" }
     for i, split in ipairs(path_split) do

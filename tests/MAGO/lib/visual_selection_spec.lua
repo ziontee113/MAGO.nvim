@@ -1,24 +1,19 @@
 local test_helpers = require("MAGO.lib.test_helpers")
-local lib_get_text = require("MAGO.lib.visual_selection")
+local lib = require("MAGO.lib.visual_selection")
 
 describe("get_selection_lines", function()
     after_each(function()
         vim.api.nvim_buf_delete(0, { force = true })
     end)
 
-    it("works", function()
+    it("returns selected lines", function()
         test_helpers.set_lines([[
 Hello World.
 Wassup Beijing.]])
-
         vim.cmd("norm! wvje")
 
-        local want = {
-            "World.",
-            "Wassup Beijing",
-        }
-        local got = lib_get_text.get_selection_lines()
-        assert.same(want, got)
+        local want = { "World.", "Wassup Beijing" }
+        assert.same(want, lib.get_selection_lines())
     end)
 end)
 
@@ -27,81 +22,71 @@ describe("get_selection_text", function()
         vim.api.nvim_buf_delete(0, { force = true })
     end)
 
-    it("works", function()
+    it("returns selected text", function()
         test_helpers.set_lines([[
 Hello World.
 Wassup Beijing.]])
-
         vim.cmd("norm! wvje")
 
         local want = [[
 World.
 Wassup Beijing]]
-        local got = lib_get_text.get_selection_text()
-        assert.same(want, got)
+        assert.same(want, lib.get_selection_text())
     end)
 
-    it("works with V selection", function()
+    it("returns full lines with V", function()
         test_helpers.set_lines([[
 Hello World.
 Wassup Beijing.]])
-
         vim.cmd("norm! Vj")
 
         local want = [[
 Hello World.
 Wassup Beijing.]]
-        local got = lib_get_text.get_selection_text()
-        assert.same(want, got)
+        assert.same(want, lib.get_selection_text())
     end)
 
-    it("works with V selection with indentation case 1", function()
+    it("keeps indents with V", function()
         test_helpers.set_lines([[
 Hello World.
     Wassup Beijing.]])
-
         vim.cmd("norm! Vj")
 
         local want = [[
 Hello World.
     Wassup Beijing.]]
-        local got = lib_get_text.get_selection_text()
-        assert.same(want, got)
+        assert.same(want, lib.get_selection_text())
     end)
 
-    it("works with V selection with indentation case 2", function()
+    it("handles indents with V and G", function()
         test_helpers.set_lines([[
 local myfunc = function()
     -- TODO: 
 end]])
-
         vim.cmd("norm! VG")
 
         local want = [[
 local myfunc = function()
     -- TODO: 
 end]]
-        local got = lib_get_text.get_selection_text()
-        assert.same(want, got)
+        assert.same(want, lib.get_selection_text())
     end)
 end)
 
-describe("get_selection_text with dedent option", function()
+describe("get_selection_text with dedent", function()
     after_each(function()
         vim.api.nvim_buf_delete(0, { force = true })
     end)
 
-    it("works", function()
+    it("dedents text", function()
         test_helpers.set_lines([[
 local myfunc = function()
     -- TODO:
 end]])
-
         vim.cmd("norm! jV")
 
         local want = [[
 -- TODO:]]
-        local got = lib_get_text.get_selection_text({ dedent = true })
-        assert.same(want, got)
+        assert.same(want, lib.get_selection_text({ dedent = true }))
     end)
 end)
