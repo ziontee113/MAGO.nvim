@@ -7,20 +7,15 @@ M.get_visual_range = function()
     local end_row, end_col = vim.fn.line("."), vim.fn.col(".")
 
     if vim.fn.mode() == "V" then
-        start_col = 1
-        end_col = vim.fn.col("$") - 1
+        start_col, end_col = 1, vim.fn.col("$") - 1
     end
 
     if start_row > end_row then
-        local temp_start_row = end_row
-        end_row = start_row
-        start_row = temp_start_row
+        start_row, end_row = end_row, start_row
     end
 
     if start_row == end_row and start_col > end_col then
-        local temp_start_col = end_col
-        end_col = start_col
-        start_col = temp_start_col
+        start_col, end_col = end_col, start_col
     end
 
     return start_row, start_col, end_row, end_col
@@ -43,6 +38,7 @@ M.get_selection_text = function(opts)
         lines = lib_strings.dedent(lines)
     end
 
+    ---@diagnostic disable: param-type-mismatch
     return table.concat(lines, "\n")
 end
 
