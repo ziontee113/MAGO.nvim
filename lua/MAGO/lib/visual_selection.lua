@@ -2,6 +2,10 @@ local lib_strings = require("MAGO.lib.strings_utils")
 
 local M = {}
 
+--- It finds `start_row, start_col, end_row, end_col` of the current visual selection,
+---- adjusts the columns if the selection mode is in "V" (visual line) mode,
+---- swaps *start* and *end* positions if *start* is larger than *end*.
+--- Returns `start_row, start_col, end_row, end_col` in a *tuple*.
 M.get_visual_range = function()
     local start_row, start_col = vim.fn.line("v"), vim.fn.col("v")
     local end_row, end_col = vim.fn.line("."), vim.fn.col(".")
@@ -21,15 +25,13 @@ M.get_visual_range = function()
     return start_row, start_col, end_row, end_col
 end
 
+--- Returns current visual selection's contents in lines (table of strings)
 M.get_selection_lines = function()
     local start_row, start_col, end_row, end_col = M.get_visual_range()
-
-    local lines =
-        vim.api.nvim_buf_get_text(0, start_row - 1, start_col - 1, end_row - 1, end_col, {})
-
-    return lines
+    return vim.api.nvim_buf_get_text(0, start_row - 1, start_col - 1, end_row - 1, end_col, {})
 end
 
+--- Returns the content (string) of the current visual selection
 M.get_selection_text = function(opts)
     opts = opts or {}
     local lines = M.get_selection_lines()
